@@ -9,4 +9,9 @@
 *.ppf
 *.qip
 *.v
-software_codes/
+*.qdf
+*.cdf
+*.pin
+*.qpf
+*.sld
+*.qws
