@@ -19,21 +19,21 @@ begin
     if(Reset)
     begin
         from_sw_data_out_buffer <= 
-        OTG_ADDR                <= 
-        OTG_RD_N                <= 
-        OTG_WR_N                <= 
-        OTG_CS_N                <= 
-        OTG_RST_N               <= 
+        OTG_ADDR                <= from_sw_address;
+        OTG_RD_N                <= from_sw_r;
+        OTG_WR_N                <= from_sw_w;
+        OTG_CS_N                <= from_sw_cs;
+        OTG_RST_N               <= from_sw_reset;
         from_sw_data_in         <= 
     end
     else 
     begin
         from_sw_data_out_buffer <= 
-        OTG_ADDR                <= 
-        OTG_RD_N                <= 
-        OTG_WR_N                <= 
-        OTG_CS_N                <= 
-        OTG_RST_N               <= 
+        OTG_ADDR                <= from_sw_address;
+        OTG_RD_N                <= from_sw_r;
+        OTG_WR_N                <= from_sw_w;
+        OTG_CS_N                <= from_sw_cs;
+        OTG_RST_N               <= from_sw_reset;
         from_sw_data_in         <= 
     end
 end
