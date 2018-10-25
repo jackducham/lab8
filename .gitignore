@@ -1,0 +1,12 @@
+*.qsf
+
+*.bak
+
+*.done
+*.jdi
+*.smsg
+*.rpt
+*.ppf
+*.qip
+*.v
+software_codes/
