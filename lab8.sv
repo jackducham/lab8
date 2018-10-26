@@ -80,7 +80,7 @@ module lab8( input               CLOCK_50,
                             .OTG_RST_N(OTG_RST_N)
     );
      
-     lab8_soc nios_system(
+     lab8_soc m_lab8_soc(
                              .clk_clk(Clk),         
                              .reset_reset_n(1'b1),    // Never reset NIOS
                              .sdram_wire_addr(DRAM_ADDR), 
