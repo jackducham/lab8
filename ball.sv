@@ -18,7 +18,8 @@ module  ball ( input         Clk,                // 50 MHz clock
                              Reset,              // Active-high reset signal
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [9:0]   DrawX, DrawY,       // Current pixel coordinates
-               output logic  is_ball             // Whether current pixel belongs to ball or background
+               output logic  is_ball,             // Whether current pixel belongs to ball or background
+					input [7:0] keycode
               );
     
     parameter [9:0] Ball_X_Center = 10'd320;  // Center position on the X axis
@@ -49,7 +50,7 @@ module  ball ( input         Clk,                // 50 MHz clock
             Ball_X_Pos <= Ball_X_Center;
             Ball_Y_Pos <= Ball_Y_Center;
             Ball_X_Motion <= 10'd0;
-            Ball_Y_Motion <= Ball_Y_Step;
+            Ball_Y_Motion <= 10'd0;
         end
         else
         begin
@@ -64,6 +65,7 @@ module  ball ( input         Clk,                // 50 MHz clock
     // You need to modify always_comb block.
     always_comb
     begin
+
         // By default, keep motion and position unchanged
         Ball_X_Pos_in = Ball_X_Pos;
         Ball_Y_Pos_in = Ball_Y_Pos;
@@ -78,15 +80,78 @@ module  ball ( input         Clk,                // 50 MHz clock
             // e.g. Ball_Y_Pos - Ball_Size <= Ball_Y_Min 
             // If Ball_Y_Pos is 0, then Ball_Y_Pos - Ball_Size will not be -4, but rather a large positive number.
             if( Ball_Y_Pos + Ball_Size >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
-                Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);  // 2's complement.  
+					begin
+                Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);  // 2's complement. 
+					Ball_X_Motion_in = 1'b0; 
+					end
             else if ( Ball_Y_Pos <= Ball_Y_Min + Ball_Size )  // Ball is at the top edge, BOUNCE!
+					begin
                 Ball_Y_Motion_in = Ball_Y_Step;
+					 Ball_X_Motion_in = 1'b0;
+					end
             
-				if( Ball_X_Pos + Ball_Size >= Ball_X_Max )  // Ball is at the bottom edge, BOUNCE!
+				else if( Ball_X_Pos + Ball_Size >= Ball_X_Max )  // Ball is at the right edge, BOUNCE!
+					begin
                 Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1);  // 2's complement.  
-            else if ( Ball_X_Pos <= Ball_X_Min + Ball_Size )  // Ball is at the top edge, BOUNCE!
+					 Ball_Y_Motion_in = 1'b0;
+					end
+            else if ( Ball_X_Pos <= Ball_X_Min + Ball_Size )  // Ball is at the left edge, BOUNCE!
+					begin
                 Ball_X_Motion_in = Ball_X_Step;
-        
+					 Ball_Y_Motion_in = 1'b0;
+					end
+				else;
+        		  
+				case(keycode[7:0])
+				8'h04: //a 
+				begin
+            if (Ball_X_Pos <= Ball_X_Min + Ball_Size)  // Ball is at the left edge, BOUNCE!
+					begin
+                Ball_X_Motion_in = Ball_X_Step;
+					 Ball_Y_Motion_in = 1'b0;
+					end
+				else begin
+				Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1);
+				Ball_Y_Motion_in = 1'b0;
+				end
+				end
+				8'h16: //s 
+				begin
+				if( Ball_Y_Pos + Ball_Size >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
+					begin
+               Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);  // 2's complement. 
+					Ball_X_Motion_in = 1'b0; 
+					end				
+				else begin
+				Ball_Y_Motion_in = Ball_Y_Step;
+				Ball_X_Motion_in = 1'b0;
+				end
+				end
+				8'h07: //d 
+				begin
+				if( Ball_X_Pos + Ball_Size >= Ball_X_Max )  // Ball is at the right edge, BOUNCE!
+					begin
+                Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1);  // 2's complement.  
+					 Ball_Y_Motion_in = 1'b0;
+					end
+				else begin
+				Ball_X_Motion_in = Ball_X_Step;
+				Ball_Y_Motion_in = 1'b0;
+				end
+				end
+				8'h1A: //w
+				begin
+				if ( Ball_Y_Pos <= Ball_Y_Min + Ball_Size )  // Ball is at the top edge, BOUNCE!
+					begin
+                Ball_Y_Motion_in = Ball_Y_Step;
+					 Ball_X_Motion_in = 1'b0;
+					end
+				else begin
+				Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);
+				Ball_X_Motion_in = 1'b0;
+				end
+				end
+				endcase
             // Update the ball's position with its motion
             Ball_X_Pos_in = Ball_X_Pos + Ball_X_Motion;
             Ball_Y_Pos_in = Ball_Y_Pos + Ball_Y_Motion;

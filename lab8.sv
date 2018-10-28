@@ -102,7 +102,7 @@ module lab8( input               CLOCK_50,
                              .otg_hpi_w_export(hpi_w),
                              .otg_hpi_reset_export(hpi_reset)
     );
-    
+	 
     // Use PLL to generate the 25MHZ VGA_CLK.
     // You will have to generate it on your own in simulation.
     vga_clk vga_clk_instance(.inclk0(Clk), .c0(VGA_CLK));
@@ -113,7 +113,7 @@ module lab8( input               CLOCK_50,
 														 .DrawX(x),.DrawY(y));
     
     // Which signal should be frame_clk?
-    ball ball_instance(.Clk(Clk),.Reset(Reset_h),.frame_clk(VGA_CLK),.DrawX(x),.DrawY(y),.is_ball(is_ball));
+    ball ball_instance(.Clk(Clk),.Reset(Reset_h),.frame_clk(VGA_VS),.DrawX(x),.DrawY(y),.is_ball(is_ball),.keycode(keycode));
     
     color_mapper color_instance(.is_ball(is_ball),.DrawX(x),.DrawY(y),.VGA_R(VGA_R),.VGA_G(VGA_G),.VGA_B(VGA_B));
     
